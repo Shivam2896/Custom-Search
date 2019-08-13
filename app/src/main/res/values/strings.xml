@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Custom Search</string>
+    <string name="enter_search_query">Enter Search Query</string>
+    <string name="search">Search</string>
+    <string name="search_query_error_msg">Please enter search query.</string>
+    <string name="api_error_msg">Something went wrong…!!</string>
+</resources>
