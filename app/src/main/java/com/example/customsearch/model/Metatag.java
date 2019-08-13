@@ -1,10 +1,12 @@
-
 package com.example.customsearch.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Metatag {
+public class Metatag implements Parcelable {
 
     @SerializedName("viewport")
     @Expose
@@ -282,4 +284,79 @@ public class Metatag {
         this.formatDetection = formatDetection;
     }
 
+
+    protected Metatag(Parcel in) {
+        viewport = in.readString();
+        appleItunesApp = in.readString();
+        appleMobileWebAppTitle = in.readString();
+        applicationName = in.readString();
+        google = in.readString();
+        mobileWebAppCapable = in.readString();
+        themeColor = in.readString();
+        ogTitle = in.readString();
+        ogDescription = in.readString();
+        ogImage = in.readString();
+        ogLocale = in.readString();
+        ogUrl = in.readString();
+        ogSiteName = in.readString();
+        ogType = in.readString();
+        twitterCard = in.readString();
+        twitterSite = in.readString();
+        dcType = in.readString();
+        dcTitle = in.readString();
+        dcContributor = in.readString();
+        dcDate = in.readString();
+        citationPatentNumber = in.readString();
+        title = in.readString();
+        referrer = in.readString();
+        citationPdfUrl = in.readString();
+        formatDetection = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(viewport);
+        dest.writeString(appleItunesApp);
+        dest.writeString(appleMobileWebAppTitle);
+        dest.writeString(applicationName);
+        dest.writeString(google);
+        dest.writeString(mobileWebAppCapable);
+        dest.writeString(themeColor);
+        dest.writeString(ogTitle);
+        dest.writeString(ogDescription);
+        dest.writeString(ogImage);
+        dest.writeString(ogLocale);
+        dest.writeString(ogUrl);
+        dest.writeString(ogSiteName);
+        dest.writeString(ogType);
+        dest.writeString(twitterCard);
+        dest.writeString(twitterSite);
+        dest.writeString(dcType);
+        dest.writeString(dcTitle);
+        dest.writeString(dcContributor);
+        dest.writeString(dcDate);
+        dest.writeString(citationPatentNumber);
+        dest.writeString(title);
+        dest.writeString(referrer);
+        dest.writeString(citationPdfUrl);
+        dest.writeString(formatDetection);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Metatag> CREATOR = new Parcelable.Creator<Metatag>() {
+        @Override
+        public Metatag createFromParcel(Parcel in) {
+            return new Metatag(in);
+        }
+
+        @Override
+        public Metatag[] newArray(int size) {
+            return new Metatag[size];
+        }
+    };
 }

@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
 import com.example.customsearch.api.ApiClient;
 import com.example.customsearch.api.ApiInterface;
 import com.example.customsearch.model.Item;
@@ -24,16 +27,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class SearchListActivity extends AppCompatActivity {
-    //created new api keys
-    private static String CX_KEY = "006920662228794587734:f4yen7_8ndm";
-    private static String API_KEY = "AIzaSyCHB_YIt7CgxqeMx7RdG9XRs9EAVlOHv5Q";
-
     private String query;
 
 
     RecyclerView recyclerView;
-    ProgressBar progressBar, topProgressBar;
+    ProgressBar progressBar;
     TextView errorView;
+    SkeletonScreen skeletonScreen;
 
     LinearLayoutManager linearLayoutManager;
     SearchAdapter searchAdapter;
@@ -51,11 +51,15 @@ public class SearchListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_list);
 
-        query = getIntent().getStringExtra(MainActivity.KEY_QUERY);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.search);
+        }
+
+        query = getIntent().getStringExtra(Constants.KEY_QUERY);
 
         recyclerView = findViewById(R.id.recyclerview);
         progressBar = findViewById(R.id.progress_bar);
-        topProgressBar = findViewById(R.id.top_progress_bar);
         errorView = findViewById(R.id.error_view);
 
         setAdapter();
@@ -87,18 +91,24 @@ public class SearchListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         searchAdapter = new SearchAdapter(this, items);
         recyclerView.setAdapter(searchAdapter);
+
+        skeletonScreen = Skeleton.bind(recyclerView)
+                .adapter(searchAdapter)
+                .color(R.color.shimmer_color)
+                .count(7)
+                .load(R.layout.item_search_skeleton)
+                .show();
     }
 
     private void getData() {
         loading = true;
-        if (startIndex == 1)
-            topProgressBar.setVisibility(View.VISIBLE);
-        else progressBar.setVisibility(View.VISIBLE);
+        if (startIndex != 1)
+            progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = ApiClient.getClient();
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
-        Call<SearchResults> call = apiInterface.getSearchResults(query, CX_KEY, API_KEY, startIndex);
+        Call<SearchResults> call = apiInterface.getSearchResults(query, Constants.CX_KEY, Constants.API_KEY, startIndex);
         call.enqueue(new Callback<SearchResults>() {
             @Override
             public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
@@ -131,7 +141,16 @@ public class SearchListActivity extends AppCompatActivity {
     }
 
     private void dismissProgressBar() {
-        topProgressBar.setVisibility(View.GONE);
+        skeletonScreen.hide();
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

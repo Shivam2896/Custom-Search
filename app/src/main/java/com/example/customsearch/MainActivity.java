@@ -9,8 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import static com.example.customsearch.Constants.KEY_QUERY;
+
 public class MainActivity extends AppCompatActivity {
-    public static String KEY_QUERY = "QUERY";
 
     EditText searchText;
     Button searchButton;

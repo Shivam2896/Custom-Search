@@ -1,10 +1,12 @@
-
 package com.example.customsearch.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CseThumbnail {
+public class CseThumbnail implements Parcelable {
 
     @SerializedName("width")
     @Expose
@@ -40,4 +42,35 @@ public class CseThumbnail {
         this.src = src;
     }
 
+
+    protected CseThumbnail(Parcel in) {
+        width = in.readString();
+        height = in.readString();
+        src = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(width);
+        dest.writeString(height);
+        dest.writeString(src);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<CseThumbnail> CREATOR = new Parcelable.Creator<CseThumbnail>() {
+        @Override
+        public CseThumbnail createFromParcel(Parcel in) {
+            return new CseThumbnail(in);
+        }
+
+        @Override
+        public CseThumbnail[] newArray(int size) {
+            return new CseThumbnail[size];
+        }
+    };
 }

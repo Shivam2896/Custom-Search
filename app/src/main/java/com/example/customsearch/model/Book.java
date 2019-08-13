@@ -1,10 +1,12 @@
-
 package com.example.customsearch.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Book {
+public class Book implements Parcelable {
 
     @SerializedName("description")
     @Expose
@@ -51,4 +53,37 @@ public class Book {
         this.image = image;
     }
 
+
+    protected Book(Parcel in) {
+        description = in.readString();
+        url = in.readString();
+        name = in.readString();
+        image = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(description);
+        dest.writeString(url);
+        dest.writeString(name);
+        dest.writeString(image);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 }

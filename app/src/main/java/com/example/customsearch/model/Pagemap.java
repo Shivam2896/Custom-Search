@@ -1,11 +1,14 @@
-
 package com.example.customsearch.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Pagemap {
+public class Pagemap implements Parcelable {
 
     @SerializedName("cse_thumbnail")
     @Expose
@@ -74,4 +77,101 @@ public class Pagemap {
         this.hproduct = hproduct;
     }
 
+
+    protected Pagemap(Parcel in) {
+        if (in.readByte() == 0x01) {
+            cseThumbnail = new ArrayList<CseThumbnail>();
+            in.readList(cseThumbnail, CseThumbnail.class.getClassLoader());
+        } else {
+            cseThumbnail = null;
+        }
+        if (in.readByte() == 0x01) {
+            metatags = new ArrayList<Metatag>();
+            in.readList(metatags, Metatag.class.getClassLoader());
+        } else {
+            metatags = null;
+        }
+        if (in.readByte() == 0x01) {
+            cseImage = new ArrayList<CseImage>();
+            in.readList(cseImage, CseImage.class.getClassLoader());
+        } else {
+            cseImage = null;
+        }
+        if (in.readByte() == 0x01) {
+            book = new ArrayList<Book>();
+            in.readList(book, Book.class.getClassLoader());
+        } else {
+            book = null;
+        }
+        if (in.readByte() == 0x01) {
+            product = new ArrayList<Product>();
+            in.readList(product, Product.class.getClassLoader());
+        } else {
+            product = null;
+        }
+        if (in.readByte() == 0x01) {
+            hproduct = new ArrayList<Hproduct>();
+            in.readList(hproduct, Hproduct.class.getClassLoader());
+        } else {
+            hproduct = null;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (cseThumbnail == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(cseThumbnail);
+        }
+        if (metatags == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(metatags);
+        }
+        if (cseImage == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(cseImage);
+        }
+        if (book == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(book);
+        }
+        if (product == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(product);
+        }
+        if (hproduct == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(hproduct);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Pagemap> CREATOR = new Parcelable.Creator<Pagemap>() {
+        @Override
+        public Pagemap createFromParcel(Parcel in) {
+            return new Pagemap(in);
+        }
+
+        @Override
+        public Pagemap[] newArray(int size) {
+            return new Pagemap[size];
+        }
+    };
 }
