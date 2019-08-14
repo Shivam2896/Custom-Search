@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.ethanhua.skeleton.Skeleton;
-import com.ethanhua.skeleton.SkeletonScreen;
 import com.example.customsearch.api.ApiClient;
 import com.example.customsearch.api.ApiInterface;
 import com.example.customsearch.model.Item;
@@ -31,9 +29,8 @@ public class SearchListActivity extends AppCompatActivity {
 
 
     RecyclerView recyclerView;
-    ProgressBar progressBar;
+    ProgressBar progressBar, topProgressBar;
     TextView errorView;
-    SkeletonScreen skeletonScreen;
 
     LinearLayoutManager linearLayoutManager;
     SearchAdapter searchAdapter;
@@ -59,6 +56,7 @@ public class SearchListActivity extends AppCompatActivity {
         query = getIntent().getStringExtra(Constants.KEY_QUERY);
 
         recyclerView = findViewById(R.id.recyclerview);
+        topProgressBar = findViewById(R.id.top_progress_bar);
         progressBar = findViewById(R.id.progress_bar);
         errorView = findViewById(R.id.error_view);
 
@@ -87,23 +85,18 @@ public class SearchListActivity extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setNestedScrollingEnabled(false);
         searchAdapter = new SearchAdapter(this, items);
         recyclerView.setAdapter(searchAdapter);
-
-        skeletonScreen = Skeleton.bind(recyclerView)
-                .adapter(searchAdapter)
-                .color(R.color.shimmer_color)
-                .count(7)
-                .load(R.layout.item_search_skeleton)
-                .show();
     }
 
     private void getData() {
         loading = true;
-        if (startIndex != 1)
-            progressBar.setVisibility(View.VISIBLE);
+        if (startIndex == 1)
+            topProgressBar.setVisibility(View.VISIBLE);
+        else progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = ApiClient.getClient();
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
@@ -118,6 +111,7 @@ public class SearchListActivity extends AppCompatActivity {
                     if (response.body() != null) {
                         if (response.body().getItems() != null) {
                             if (response.body().getItems().size() > 0) {
+
                                 items.addAll(response.body().getItems());
                                 searchAdapter.notifyDataSetChanged();
                             } else {
@@ -151,7 +145,7 @@ public class SearchListActivity extends AppCompatActivity {
     }
 
     private void dismissProgressBar() {
-        skeletonScreen.hide();
+        topProgressBar.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
     }
 
