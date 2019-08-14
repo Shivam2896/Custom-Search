@@ -117,8 +117,16 @@ public class SearchListActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
                         if (response.body().getItems() != null) {
-                            items.addAll(response.body().getItems());
-                            searchAdapter.notifyDataSetChanged();
+                            if (response.body().getItems().size() > 0) {
+                                items.addAll(response.body().getItems());
+                                searchAdapter.notifyDataSetChanged();
+                            } else {
+                                errorView.setVisibility(View.VISIBLE);
+                                errorView.setText(R.string.no_results);
+                            }
+                        } else {
+                            errorView.setVisibility(View.VISIBLE);
+                            errorView.setText(R.string.no_results);
                         }
 
                         if (response.body().getQueries().getNextPage() != null)
@@ -129,6 +137,7 @@ public class SearchListActivity extends AppCompatActivity {
                 } else {
                     dismissProgressBar();
                     errorView.setVisibility(View.VISIBLE);
+                    errorView.setText(R.string.api_error_msg);
                 }
             }
 
@@ -136,6 +145,7 @@ public class SearchListActivity extends AppCompatActivity {
             public void onFailure(Call<SearchResults> call, Throwable t) {
                 dismissProgressBar();
                 errorView.setVisibility(View.VISIBLE);
+                errorView.setText(R.string.api_error_msg);
             }
         });
     }

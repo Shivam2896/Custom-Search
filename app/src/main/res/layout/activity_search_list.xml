@@ -24,7 +24,6 @@
         android:id="@+id/error_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/api_error_msg"
         android:padding="16dp"
         android:visibility="gone"
         android:gravity="center" />
